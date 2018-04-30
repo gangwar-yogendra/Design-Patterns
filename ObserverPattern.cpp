@@ -91,9 +91,6 @@ int main(int argc, char **argv)
 	subject.Attached(&observerB);
 	subject.Detach(&observerB);
 	subject.Attached(&observerC);
-
-	//subject.notify(MySubject::ADD);
-	//subject.notify(MySubject::REMOVE);
 	
 	subject.changeMessage(MySubject::ADD);
 	subject.changeMessage(MySubject::REMOVE);
