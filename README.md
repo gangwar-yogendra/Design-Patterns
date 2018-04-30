@@ -4,4 +4,6 @@
   
 2. Observer Design Pattern  
   
-3. Decorator Design Pattern
+3. Decorator Design Pattern  
+  
+4. Strategy Design Pattern
