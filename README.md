@@ -7,3 +7,5 @@
 3. Decorator Design Pattern  
   
 4. Strategy Design Pattern
+
+5. Facade Design Pattern
