@@ -1,140 +1,110 @@
-/*	Decorate Pattern for booking a Tennis court with
-	extra facility like ballpack and tennis racket 
-*/
+/* Refer link: https://cppcodetips.wordpress.com/tag/decorator-pattern-using-c/ */
 #include <iostream>
-#include <string>
-
-using namespace std;
-
-// Main class for court booking
-class CourtBooking
+ 
+class IiceCream
 {
-	public:
-		virtual string serve() = 0;
-		virtual float cost() = 0;
+public:
+    virtual void Make() = 0;
+    virtual ~IiceCream() { }
+ 
 };
-
-// Initially provides the services for court booking
-class HardCourtBooking: public CourtBooking
+ 
+class SimpleIceCream: public IiceCream
 {
-	public:
-		string serve() {
-			return "HardCourt";
-		}
-		float cost()
-		{
-			return 500;
-		}
+public:
+    virtual void Make() 
+    {
+        std::cout<<"\n milk + sugar +  Ice cream Powder";
+    }
+ 
+ 
 };
-
-
-// Initially provides the services for court booking
-class ClayCourtBooking: public CourtBooking
+ 
+class IceCreamDecorator: public IiceCream
 {
-	public:
-		string serve() {
-			return "ClayCourt";
-		}
-		float cost()
-		{
-			return 700;
-		}			
+ 
+public:
+    IceCreamDecorator(IiceCream& decorator):m_Decorator(decorator)
+    {
+ 
+    }
+ 
+    virtual void Make() 
+    {
+        m_Decorator.Make();
+    }
+    private:
+    IiceCream& m_Decorator;
 };
-
-
-// Decorator class
-class TennisDecorator: public CourtBooking
+ 
+class WithFruits : public IceCreamDecorator
 {
-	protected:
-		CourtBooking *m_courtBooking;
-	public:
-		TennisDecorator(CourtBooking *baseCourtBooking):m_courtBooking(baseCourtBooking)
-		{			
-		}
-		
-		string serve()
-		{
-			return m_courtBooking->serve();
-		}
-		
-		float cost()
-		{
-			return m_courtBooking->cost();
-		}
-		
+ 
+public:
+     WithFruits(IiceCream& decorator):IceCreamDecorator(decorator)
+     {
+ 
+     }
+     virtual void Make() 
+     {
+         IceCreamDecorator::Make();
+         std::cout<<" + Fruits";
+     }
+ 
 };
-
-// Now needs Ballpack with tennis court
-class BallPack: public TennisDecorator
+ 
+class WithNuts : public IceCreamDecorator
 {
-	public:
-		BallPack(CourtBooking *baseCourtBooking):TennisDecorator(baseCourtBooking)
-		{
-		}
-		
-		string serve()
-		{
-			return m_courtBooking->serve() + " with ball pack";
-		}
-		
-		float cost()
-		{
-			return m_courtBooking->cost() + 400;
-		}
+ 
+public:
+    WithNuts(IiceCream& decorator):IceCreamDecorator(decorator)
+    {
+ 
+    }
+ 
+    virtual void Make() 
+    {
+        IceCreamDecorator::Make();
+        std::cout<<" + Nuts";
+    }
+ 
 };
-
-
-// Now needs Racket of some cost with court booking
-class Racket: public TennisDecorator
+ 
+class WithWafers : public IceCreamDecorator
 {
-	public:
-		Racket(CourtBooking *baseCourtBooking):TennisDecorator(baseCourtBooking)
-		{
-		}
-		
-		string serve()
-		{
-			return m_courtBooking->serve() + " with tennis racket";
-		}
-		
-		float cost()
-		{
-			return m_courtBooking->cost() + 500;
-		}
+ 
+public:
+    WithWafers(IiceCream& decorator):IceCreamDecorator(decorator)
+    {
+ 
+    }
+ 
+    virtual void Make() 
+    {
+        IceCreamDecorator::Make();
+        std::cout<<" + Wafers";
+    }
+ 
 };
-
+ 
 int main()
 {
-	CourtBooking *baseCourtBooking = new HardCourtBooking;
-	cout<<"Basic Hard court booking:"<<"\n";
-	cout<<baseCourtBooking->serve()<<" "<<baseCourtBooking->cost();
-	cout<<"\n";
-	cout<<"\n";
-	
-	CourtBooking *C_baseCourtBooking = new ClayCourtBooking;
-	cout<<"Basic clay court booking:"<<"\n";
-	cout<<C_baseCourtBooking->serve()<<" "<<C_baseCourtBooking->cost();
-	cout<<"\n";
-	cout<<"\n";
-	
-	cout<<"HardCourt + BallPack:"<<"\n";
-	CourtBooking *ballPackBooking = new BallPack(baseCourtBooking);
-	cout<<ballPackBooking->serve()<<" "<<ballPackBooking->cost();
-	cout<<"\n";
-	cout<<"\n";
-	
-	delete ballPackBooking;
-	
-	
-	cout<<"ClayBooking + Racket:"<<"\n";
-	CourtBooking *racketClayBooking = new Racket(C_baseCourtBooking);
-	cout<<racketClayBooking->serve()<<" "<<racketClayBooking->cost();
-	
-	cout<<"\n";
-	
-	delete racketClayBooking;
-	delete baseCourtBooking;
-	delete C_baseCourtBooking;
-	
-	return 0;
+    IiceCream* pIceCreamSimple = new SimpleIceCream();
+    pIceCreamSimple->Make();
+ 
+    IiceCream* pIceCreamFruits = new WithFruits(*pIceCreamSimple);
+    pIceCreamFruits->Make();
+ 
+    IiceCream* pIceCreamNuts   = new WithNuts(*pIceCreamFruits);
+    pIceCreamNuts->Make();
+ 
+    IiceCream* pIceCreamWafers = new WithWafers(*pIceCreamNuts);
+    pIceCreamWafers->Make();
+ 
+    delete pIceCreamSimple;
+    delete pIceCreamFruits;
+    delete pIceCreamNuts;
+    delete pIceCreamWafers;
+ 
+    return 0;
 }

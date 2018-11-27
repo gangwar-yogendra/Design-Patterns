@@ -7,6 +7,7 @@
 #include <iostream>
 
 
+/* Interface class kick Behavior */
 class KickBehavior
 {	
 	public:
@@ -15,6 +16,7 @@ class KickBehavior
 		virtual void kick() = 0;		
 };
 
+/* Subclass of interface KickBehavior */
 class HighKick: public KickBehavior
 {
 	public:
@@ -26,6 +28,7 @@ class HighKick: public KickBehavior
 		}		
 };
 
+/* Subclass of interface KickBehavior */
 class LowKick: public KickBehavior 
 {
 	public:
@@ -38,6 +41,7 @@ class LowKick: public KickBehavior
 };
 
 
+/* Interface for Jump */
 class JumpBehavior
 {
 	public:
@@ -49,6 +53,7 @@ class JumpBehavior
 		virtual void jump() = 0;
 };
 
+/* Subclass of interface JumpBehavior */
 class HighJump: public JumpBehavior
 {
 	public:
@@ -62,6 +67,7 @@ class HighJump: public JumpBehavior
 		}
 };
 
+/* Subclass of interface JumpBehavior */
 class LowJump: public JumpBehavior
 {
 	public:
@@ -75,7 +81,9 @@ class LowJump: public JumpBehavior
 		}
 };
 
+
 // Abstract Fighter (main) class
+// Composition with Interfaces
 class Fighter
 {
 	private:
@@ -87,6 +95,16 @@ class Fighter
 		Fighter(KickBehavior *m_kick, JumpBehavior *m_jump):b_kick(m_kick), b_jump(m_jump) { }
 		virtual ~Fighter() { }
 		
+		void setJump(JumpBehavior *jump)
+		{
+			b_jump = jump;
+		}
+
+		void setKick(KickBehavior *kick)
+		{
+			b_kick = kick;
+		}
+				
 		void punch()
 		{
 			std::cout<<"Default Punch"<<std::endl;
@@ -141,11 +159,16 @@ int main(int argc, char **argv)
 	
 	std::cout<<"\n";
 	JumpBehavior *jumpBehaviorB = new HighJump;
+	JumpBehavior *lowJumpB = new LowJump;
 	KickBehavior *kickBehaviorB = new HighKick;
 	Fighter *fighterB = new FighterTypeB(kickBehaviorB, jumpBehaviorB);
 	fighterB->display();
 	fighterB->punch();
 	fighterB->kick();
+	fighterB->jump();
+	
+	std::cout<<"\nSet low jump for fighterB: \n";
+	fighterB->setJump(lowJumpB);
 	fighterB->jump();
 
 	delete kickBehaviorA;
@@ -158,4 +181,3 @@ int main(int argc, char **argv)
 	
 	return 0;
 }
-

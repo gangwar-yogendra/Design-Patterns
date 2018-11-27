@@ -1,99 +1,120 @@
 //: https://en.wikipedia.org/wiki/Observer_pattern
-//: http://www.bogotobogo.com/DesignPatterns/observer.php
+//: https://sourcemaking.com/design_patterns/observer/cpp/3
 
 #include <iostream>
 #include <vector>
 #include <string>
 
-// Observer class
-class Observer
-{
-public:
-	virtual ~Observer() {}
-	virtual void update(int message) = 0;
-};
-
+class Observer;
 // Subject Class
 class Subject
 {
 public:
-	virtual ~Subject();
+	virtual ~Subject(){}
 	// Attach observer
-	virtual void Attached(Observer *);
+	void Attached(Observer *obs){
+		mObservers.push_back(obs);
+	}
 	// Detach observer
-	virtual void Detach (Observer *);
+	virtual void Detach (Observer *obs)
+	{
+		int count = mObservers.size();
+		
+		int i;
+		for(i = 0; i<count; i++)
+		{
+			if(mObservers[i] == 0)
+				break;
+			
+			if(i < count)
+			{
+				mObservers.erase(mObservers.begin() + i);
+			}
+		}
+	}
+	
+	void setValue(int x)
+	{
+		value = x;
+		notify();
+	}	
+	
+	int getValue()
+	{
+		return value;
+	}
+	
 	// Notify observer
-	virtual void notify(int message);
+	void notify();
+
 private:
 	std::vector<Observer *> mObservers;
+	int value;
 };
 
-Subject::~Subject()
-{}
-
-void Subject::Attached(Observer *observer)
+class Observer
 {
-	mObservers.push_back(observer);
-}
+private:
+	Subject *sub;
+	int denom;
+public:
+	Observer(Subject *s, int div):sub(s), denom(div) {
+		sub->Attached(this);
+	}
+	
+	Subject *getSubject()
+	{
+		return sub;
+	}
+	
+	int getDivisor()
+	{
+		return denom;
+	}
+	
+	virtual void update() = 0;
+};
 
-void Subject::Detach(Observer *observer)
-{
-	int count = mObservers.size(); 
-	int i; 
-
-	for (i = 0; i < count; i++) { 
-		if(mObservers[i] == 0) 
-		break; 
-	} 
-	if(i < count) 
-		mObservers.erase(mObservers.begin() + i);
-}
-
-void Subject::notify(int msg)
+void Subject::notify()
 {
 	int count = mObservers.size(); 
 
 	for (int i = 0; i < count; i++) {
-		(mObservers[i])->update(msg);
+		(mObservers[i])->update();
 	}
 }
 
-class MySubject : public Subject
+class ObserverA : public Observer
 {
 public:
-	enum Message {ADD, REMOVE};
-	void changeMessage(int value )
+	explicit ObserverA(Subject *s, int div) : Observer(s, div) {}
+	void update()
 	{
-		notify(value);
+		int v = getSubject()->getValue();
+		int d = getDivisor();
+		std::cout << "v: " <<v << " d: "<< d << " divison: "<< v/d << std::endl;		
 	}
 };
 
-class MyObserver : public Observer
+class ObserverB : public Observer
 {
 public:
-	explicit MyObserver(const std::string &str) : name(str) {}
-	void update(int message)
+	explicit ObserverB(Subject *s, int div) : Observer(s, div) {}
+	void update()
 	{
-		std::cout << name << " Got message " << message << std::endl;
+		int v = getSubject()->getValue();
+		int d = getDivisor();
+		std::cout << "v: " <<v << " d: "<< d << " mod: "<< v%d << std::endl;		
 	}
-private:
-	std::string name;
 };
 
 int main(int argc, char **argv) 
 {
-	MyObserver observerA("observerA");
-	MyObserver observerB("observerB");
-	MyObserver observerC("observerC");
-
-	MySubject subject;
-	subject.Attached(&observerA);
-	subject.Attached(&observerB);
-	subject.Detach(&observerB);
-	subject.Attached(&observerC);
+	Subject sub;
+	Observer *obserA = new ObserverA(&sub, 3);
+	Observer *obserB = new ObserverB(&sub, 5);
 	
-	subject.changeMessage(MySubject::ADD);
-	subject.changeMessage(MySubject::REMOVE);
+	sub.setValue(30);
 
 	return 0;
 }
