@@ -1,4 +1,5 @@
 /* Refer link: https://cppcodetips.wordpress.com/tag/decorator-pattern-using-c/ */
+
 #include <iostream>
  
 class IiceCream
