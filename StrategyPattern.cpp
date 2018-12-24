@@ -1,11 +1,12 @@
-/* 
+/*
+	Example of 'Strategy' Design Pattern in C++
 	This is an example of a game with different fighters and
-	the different behavior of fight for each fighter
-	referenceLink: https://www.geeksforgeeks.org/strategy-pattern-set-2/
+	the different behavior of fight for different fighters
+	for detail please refer the below link:-
+	https://www.geeksforgeeks.org/strategy-pattern-set-2/
 */
 
 #include <iostream>
-
 
 /* Interface class kick Behavior */
 class KickBehavior
@@ -137,7 +138,8 @@ class FighterTypeA: public Fighter
 class FighterTypeB: public Fighter
 {
 	public:
-		FighterTypeB(KickBehavior *m_kick, JumpBehavior *m_jump): Fighter(m_kick, m_jump) {
+		FighterTypeB(KickBehavior *m_kick, JumpBehavior *m_jump): Fighter(m_kick, m_jump) 
+		{
 		}
 		
 		void display()
