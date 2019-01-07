@@ -38,7 +38,7 @@ public:
 	~VehicleFactory() { 
         if(pVehicle) {
             delete pVehicle;
-		    pVehicle = NULL;
+            pVehicle = NULL;
         }
     }
     Vehicle* getVehicleType(int index)
@@ -67,10 +67,10 @@ int main()
     Vehicle* pFour = factory->getVehicleType(2);
     pFour->printVehicle();
 	
-	Vehicle* pFour1 = factory->getVehicleType(3);
-	if(pFour1) {
+    Vehicle* pFour1 = factory->getVehicleType(3);
+    if(pFour1) {
         pFour1->printVehicle();
-	}
+    }
 	
-	return 0;
+    return 0;
 }
