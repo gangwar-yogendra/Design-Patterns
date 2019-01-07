@@ -6,12 +6,14 @@
 
 3. Facade design pattern
 
-4. Object pool design pattern
+4. Factory design pattern
 
-5. Observer design pattern
+5. Object pool design pattern
 
-6. Prototype design pattern
+6. Observer design pattern
 
-7. Singleton design pattern
+7. Prototype design pattern
 
-8. Strategy design pattern
+8. Singleton design pattern
+
+9. Strategy design pattern
