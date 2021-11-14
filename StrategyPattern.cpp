@@ -10,76 +10,47 @@
 
 /* Interface class kick Behavior */
 class KickBehavior
-{	
-	public:
-		KickBehavior(){ };
-		~KickBehavior(){ };
-		virtual void kick() = 0;		
+{
+public:
+	KickBehavior() { };
+	~KickBehavior() { };
+	virtual void kick() = 0;
 };
 
 /* Subclass of interface KickBehavior */
-class HighKick: public KickBehavior
+class HighKick : public KickBehavior
 {
-	public:
-		HighKick(){ };
-		~HighKick(){ };
-		
-		void kick() {
-			std::cout<<"High Kick"<<std::endl;
-		}		
+public:
+	HighKick() { };
+	~HighKick() { };
+
+	void kick() {
+		std::cout << "High Kick" << std::endl;
+	}
 };
 
 /* Subclass of interface KickBehavior */
-class LowKick: public KickBehavior 
+class LowKick : public KickBehavior
 {
-	public:
-		LowKick() {	};
-		~LowKick() { };
-		
-		void kick() {
-			std::cout<<"Low Kick"<<std::endl;
-		}
+public:
+	LowKick() {	};
+	~LowKick() { };
+
+	void kick() {
+		std::cout << "Low Kick" << std::endl;
+	}
 };
 
-
-/* Interface for Jump */
-class JumpBehavior
+/* Subclass of interface KickBehavior */
+class NoKick : public KickBehavior
 {
-	public:
-		JumpBehavior() {
-		};
-		~JumpBehavior() {
-		};
-		
-		virtual void jump() = 0;
-};
+public:
+	NoKick() {	};
+	~NoKick() { };
 
-/* Subclass of interface JumpBehavior */
-class HighJump: public JumpBehavior
-{
-	public:
-		HighJump() {
-		};
-		~HighJump() {
-		};
-		
-		void jump() {
-			std::cout<<"High Jump"<<std::endl;
-		}
-};
-
-/* Subclass of interface JumpBehavior */
-class LowJump: public JumpBehavior
-{
-	public:
-		LowJump() {
-		};
-		~LowJump() {
-		};
-		
-		void jump() {
-			std::cout<<"Low Jump"<<std::endl;
-		}
+	void kick() {
+		std::cout << "Not allow to Kick" << std::endl;
+	}
 };
 
 
@@ -87,99 +58,76 @@ class LowJump: public JumpBehavior
 // Composition with Interfaces
 class Fighter
 {
-	private:
-		KickBehavior *b_kick;
-		JumpBehavior *b_jump;
-		
-	public:
-		Fighter():b_kick(NULL), b_jump(NULL) {};
-		Fighter(KickBehavior *m_kick, JumpBehavior *m_jump):b_kick(m_kick), b_jump(m_jump) { }
-		virtual ~Fighter() { }
-		
-		void setJump(JumpBehavior *jump)
-		{
-			b_jump = jump;
-		}
+private:
+	KickBehavior* b_kick;
 
-		void setKick(KickBehavior *kick)
-		{
-			b_kick = kick;
-		}
-				
-		void punch()
-		{
-			std::cout<<"Default Punch"<<std::endl;
-		}
-		
-		void kick()
-		{
-			b_kick->kick();
-		}
-		
-		void jump()
-		{
-			b_jump->jump();
-		}
-		
-		virtual void display() = 0;		
+public:
+	Fighter() :b_kick(NULL) {};
+	Fighter(KickBehavior* m_kick) :b_kick{ m_kick } { }
+	virtual ~Fighter() { }
+
+	void setKick(KickBehavior* kick)
+	{
+		b_kick = kick;
+	}
+
+	void kick()
+	{
+		b_kick->kick();
+	}
+
+	void punch()
+	{
+		std::cout << "Default Punch" << std::endl;
+	}
+
+	virtual void display() = 0;
 };
 
-class FighterTypeA: public Fighter
+class FighterTypeA : public Fighter
 {
-	public:
-		FighterTypeA(KickBehavior *m_kick, JumpBehavior *m_jump): Fighter(m_kick, m_jump) {
-		}
-		void display()
-		{
-			std::cout<<"FighterTypeA"<<std::endl;
-		}
+public:
+	FighterTypeA(KickBehavior* m_kick) : Fighter(m_kick) {
+	}
+	void display()
+	{
+		std::cout << "FighterTypeA" << std::endl;
+	}
 };
 
-class FighterTypeB: public Fighter
+class FighterTypeB : public Fighter
 {
-	public:
-		FighterTypeB(KickBehavior *m_kick, JumpBehavior *m_jump): Fighter(m_kick, m_jump) 
-		{
-		}
-		
-		void display()
-		{
-			std::cout<<"FighterTypeB"<<std::endl;
-		}
+public:
+	FighterTypeB(KickBehavior* m_kick) : Fighter(m_kick) { 	}
+
+	void display()
+	{
+		std::cout << "FighterTypeB" << std::endl;
+	}
 };
 
-int main(int argc, char **argv)
-{	
-	KickBehavior *kickBehaviorA = new HighKick;
-	JumpBehavior *jumpBehaviorA = new LowJump;	
-	Fighter *fighterA = new FighterTypeA(kickBehaviorA, jumpBehaviorA);
+int main(int argc, char** argv)
+{
+	KickBehavior* kickBehaviorA = new HighKick;
+
+	Fighter* fighterA = new FighterTypeA(kickBehaviorA);
 	fighterA->display();
 	fighterA->punch();
 	fighterA->kick();
-	fighterA->jump();
-	
-	
-	std::cout<<"\n";
-	JumpBehavior *jumpBehaviorB = new HighJump;
-	JumpBehavior *lowJumpB = new LowJump;
-	KickBehavior *kickBehaviorB = new HighKick;
-	Fighter *fighterB = new FighterTypeB(kickBehaviorB, jumpBehaviorB);
+
+
+	std::cout << "\n";
+	KickBehavior* kickBehaviorB = new NoKick;
+	Fighter* fighterB = new FighterTypeB(kickBehaviorB);
 	fighterB->display();
 	fighterB->punch();
 	fighterB->kick();
-	fighterB->jump();
-	
-	std::cout<<"\nSet low jump for fighterB: \n";
-	fighterB->setJump(lowJumpB);
-	fighterB->jump();
 
 	delete kickBehaviorA;
 	delete kickBehaviorB;
-	delete jumpBehaviorA;
-	delete jumpBehaviorB;
-	
+
 	delete fighterA;
 	delete fighterB;
-	
+
 	return 0;
 }
